@@ -1,50 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <androidx.appcompat.widget.LinearLayoutCompat android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFFFFF"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-
     <LinearLayout
-        android:layout_weight="1"
+        android:background="#497136"
+        android:gravity="center"
+        android:layout_weight="0.6"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-    <ImageView
-        android:layout_gravity="center"
-        android:src="@drawable/logoui01_img01"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-    </ImageView>
-    <TextView
-        android:textStyle="bold"
-        android:textSize="30dp"
-        android:paddingTop="30dp"
-        android:layout_gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Embedded"/>
-    <TextView
-        android:textStyle="bold"
-        android:textSize="30dp"
-        android:paddingTop="10dp"
-        android:layout_gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Flage"/>
-    <TextView
-        android:textStyle="bold"
-        android:textSize="20dp"
-        android:paddingTop="30dp"
-        android:layout_gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="김영현/홍태의"/>
+        <TextView
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:textSize="30dp"
+            android:gravity="center"
+            android:text="BlueTooth List"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
     <LinearLayout
-        android:layout_weight="2"
+        android:gravity="center"
+        android:layout_weight="8"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content">
+    </LinearLayout>
 
 </androidx.appcompat.widget.LinearLayoutCompat>
-
