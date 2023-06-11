@@ -1,0 +1,25 @@
+Pin List
+
+// Button(DigitalIn)
+FIRST_BTN_PIN		PA_14
+SECOND_BTN_PIN		PB_7
+THIRD_BTN_PIN		PC_4
+
+// Motor(Motor)
+MOTOR_A_PWN_PIN		PA_7
+MOTOR_A_DIR_PIN		PC_8
+
+// Joystick(AnalogIn)
+JS_X_AXIS		PC_2
+JS_Y_AXIS		PC_3
+
+// LED(DigitalOut)
+GREEN_LED_PIN		PA_13
+YELLOW_LED_PIN		PB_10
+RED_LED_PIN		PA_4
+
+// Buzzer(PwmOut)
+BUZZER_PIN		PC_9
+
+// OLED(I2C, use Adafruit.GFX.h)
+I2C_SDA, I2C_SCL	D14, D15
