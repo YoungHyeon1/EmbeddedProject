@@ -2337,6 +2337,21 @@
               <FileType>5</FileType>
               <FilePath>mbed_config.h</FilePath>
             </File>
+            <File>
+              <FileName>DOORLOCK.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\DOORLOCK.h</FilePath>
+            </File>
+            <File>
+              <FileName>motordriver.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\motordriver.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>motordriver.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\motordriver.h</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>

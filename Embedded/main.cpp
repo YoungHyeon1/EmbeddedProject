@@ -14,26 +14,93 @@
 		Currently, files that need to be added include "motor", "temperature", "humidity" and "buzzer".
 */
 
-void Open_Close_Door(){
-	Open_Door();
-	yellowLed = 1;
-	// user click button, close Door
-	if(OPEN_BTN_EDGE() == FALLING_EDGE){
-		yellowLed = 0;
-		tm.reset();
-		Close_Door();
-	} else if(tm.read() > 30.0){		// open time over 30 sec
-		yellowLed = 0;
-		tm.reset();
-		Close_Door();
-	}
+Timer tm;
+
+enum { Waiting, Door_open, Door_waiting, Door_Close, Pwd_Mode } work;
+
+void setup(){
+	redLed = 1;
+	yellowLed = 0;
+	greenLed = 0;
+	Close_Door();
+	tm.start();
+}
+
+// Beep Setup Transliteration C
+void Beep_Setup(){
+	buzzer.period_us(BEEP_HALF_PERIOD);
+	buzzer = 0.5;
+	buzzertm.start();
+}
+
+void OLED_setup(){
+	int cnt = 0;
+	bool inverted = false;
+	int textSize = 1;
+	
+	i2cMaster.frequency(400000);
+	
+	wait(2.0);
+	myOLED.clearDisplay();
+	
+	myOLED.setTextSize(textSize);
+	myOLED.printf("FLAG DOOR LOCK Display \r\n");
+	myOLED.display();
+}
+
+void joystick_setup(){
+	jsTicker.attach(&readJoystick, 0.2);
+	ctrlTicker.attach(&Control_Motor, 1.0);
 }
 
 int main() {
+	int enter_pwd;		// interim measures
+	int pwd = 1234;
+	setup();
+	Beep_Setup();
+	OLED_setup();
+	
 	while(1){
-		if(OPEN_BTN_EDGE() == FALLING_EDGE){
-			if(greenLed == 1) Close_Door();		// if Door work is open, close door
-			else Open_Close_Door();
+		switch(work){
+			case Waiting:
+				// Add a Status Code While Waiting
+				// if(user enter pwd)
+				// work = check_pwd;
+				break;
+			
+			case Door_open:
+				Open_Door();					// 1. turn left motor
+				Open_Door_Beep();			// 2. beep sound on
+				greenLed = 0;					// 3. turn out green LED
+				tm.reset();						// 4. reset & check 30 sec of timer
+				tm.start();
+				work = Door_waiting;	// 5. change door is waiting case
+				break;
+			
+			case Door_waiting:
+				yellowLed = 1;				// waiting LED
+				// if timer over 30 sec or user click enter button
+				if(tm.read_ms() >= 30000 || ENTER_BTN_EDGE() == FALLING_EDGE){
+					tm.reset();
+					work = Door_Close;	// change Close case
+				}
+				break;
+				
+			case Door_Close:
+				yellowLed = 0;				// 1. turn off waiting LED
+				Close_Door();					// 2. turn right motor
+				Close_Door_Beep();		// 3. beep sound on
+				work = Waiting;				// 4. change Waiting case
+				break;
+			
+			case Pwd_Mode:
+				scanf("%d", &enter_pwd);	// interim measure
+				if(Checking_PWD(pwd, enter_pwd) == 1) work = Door_open;
+				else {
+					Incorrect_Number_Beep();
+					work = Waiting;
+				}
+				break;
 		}
 	}
 }

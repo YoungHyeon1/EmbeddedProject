@@ -45,3 +45,25 @@ void Motor::stop(void){
 	_pwm = 0;
 	_sign = MOTOR_STOP;
 }
+void Motor::setDir(int dir){
+		if(_sign == MOTOR_STOP){
+			_dir = dir;
+		}
+		else if (_dir != dir){
+			double speed = _pwm;
+			_pwm = 0;
+			wait(0.1);
+			_dir = dir;
+			_pwm = speed;
+		}
+}
+void Motor::incSpeed(double step){
+	double speed = _pwm;
+	speed+= step;
+	if (speed < 0) speed = 0;
+	else if(speed > 1.0) speed = 1.0;
+	_pwm = speed;
+}
+void Motor::decSpeed(double step){
+
+}
