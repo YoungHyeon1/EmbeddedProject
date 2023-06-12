@@ -17,6 +17,7 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,16 +26,16 @@ public class MainActivity extends AppCompatActivity {
 
 
     private BluetoothAdapter bluetoothAdapter;
-
+    private ListView bt_list_view;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        bt_list_view = (ListView)findViewById(R.id.listview);
         bluetoothPermission();
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         registerReceiver(receiver, filter);
-
         //moveList(1);
     }
 
@@ -61,6 +62,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
+        BluetoothAdapterView mMyAdapter = new BluetoothAdapterView();
+
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
@@ -80,9 +83,24 @@ public class MainActivity extends AppCompatActivity {
                 }
                 String deviceName = device.getName();
                 String deviceHardwareAddress = device.getAddress(); // MAC address
+                mMyAdapter.addItem(deviceName, deviceHardwareAddress);
+                bt_list_view.setAdapter(mMyAdapter);
             }
         }
     };
+
+//    private void dataSetting(){
+//
+//        BluetoothAdapterView mMyAdapter = new BluetoothAdapterView();
+//
+//
+//        for (int i=0; i<30; i++) {
+//            mMyAdapter.addItem("name_" + i, String.valueOf(i));
+//        }
+//
+//        /* 리스트뷰에 어댑터 등록 */
+//        bt_list_view.setAdapter(mMyAdapter);
+//    }
 
 
 }

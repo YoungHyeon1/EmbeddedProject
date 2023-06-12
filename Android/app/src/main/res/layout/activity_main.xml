@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat android:orientation="vertical"
+<androidx.appcompat.widget.LinearLayoutCompat
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
@@ -8,10 +9,10 @@
     <LinearLayout
         android:background="#497136"
         android:gravity="center"
-        android:layout_weight="0.6"
+        android:layout_weight="8"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <TextView
             android:textColor="#FFFFFF"
@@ -20,16 +21,20 @@
             android:gravity="center"
             android:text="BlueTooth List"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="match_parent"/>
 
     </LinearLayout>
 
     <LinearLayout
         android:gravity="center"
-        android:layout_weight="8"
+        android:layout_weight="1"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
+        <ListView
+            android:id="@+id/listview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
     </LinearLayout>
 
 </androidx.appcompat.widget.LinearLayoutCompat>
