@@ -2352,6 +2352,11 @@
               <FileType>5</FileType>
               <FilePath>.\motordriver.h</FilePath>
             </File>
+            <File>
+              <FileName>Doorlock.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\Doorlock.cpp</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>
