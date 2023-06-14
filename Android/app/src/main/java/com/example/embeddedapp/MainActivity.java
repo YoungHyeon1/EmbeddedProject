@@ -32,6 +32,8 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private List permissionList;
+    BluetoothAdapterView mMyAdapter;
+
     private String[] permissions = {
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.BLUETOOTH_SCAN,
@@ -43,20 +45,23 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
+//        SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        bt_list_view = (ListView) findViewById(R.id.listview);
+        mMyAdapter = new BluetoothAdapterView(MainActivity.this);
         try{
             bluetoothPermission();
         }catch (Exception e)
         {
             Log.d("Permission Error", String.valueOf(e));
         }
-        bt_list_view = (ListView) findViewById(R.id.listview);
         Log.d("TEST", "OnCreate");
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         registerReceiver(receiver, filter);
         //moveList(1);
+
     }
 
     @Override
@@ -131,9 +136,14 @@ public class MainActivity extends AppCompatActivity {
         if (!bluetoothAdapter.isEnabled()) {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent, 100);
+            mMyAdapter.addItem("TEST Name", "TestAddress");
+            bt_list_view.setAdapter(mMyAdapter);
             bluetoothAdapter.startDiscovery();
         }else{
+            mMyAdapter.addItem("TEST Name", "TestAddress");
+            bt_list_view.setAdapter(mMyAdapter);
             bluetoothAdapter.startDiscovery();
+
         }
         if (ContextCompat.checkSelfPermission(
                 MainActivity.this,
@@ -146,7 +156,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
         private final BroadcastReceiver receiver = new BroadcastReceiver() {
-            BluetoothAdapterView mMyAdapter = new BluetoothAdapterView();
 
             public void onReceive(Context context, Intent intent) {
                 String action = intent.getAction();

@@ -1,6 +1,11 @@
 package com.example.embeddedapp;
+import static android.provider.AlarmClock.EXTRA_MESSAGE;
+
+import static androidx.core.content.ContextCompat.startActivity;
+import android.content.Intent;
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +17,10 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 public class BluetoothAdapterView extends BaseAdapter{
+    private Context _context;
+    public BluetoothAdapterView(Context context) {
+        this._context = context;
+    }
     private ArrayList<BluetoothItems> items = new ArrayList<>();
     @Override
     public int getCount() {
@@ -49,6 +58,9 @@ public class BluetoothAdapterView extends BaseAdapter{
                 System.out.println((int)v.getTag());
                 Toast.makeText(context, items.get((int)v.getTag()).getMacAddress(), Toast.LENGTH_LONG).show();
                 items.get(v.getTag().hashCode()).getMacAddress();
+                Intent intent = new Intent(_context, BlueToothViews.class);
+                intent.putExtra("TEST", "TEST");
+                _context.startActivity(intent);
             }
         });
         return convertView;
