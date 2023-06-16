@@ -16,7 +16,7 @@
 
 Timer tm;
 
-enum { Waiting, Door_open, Door_waiting, Door_Close, Pwd_Mode } work;
+enum { Waiting, Door_open, Door_waiting, Door_Close, Pwd_Mode, Doorlock_OLED } work;
 
 void setup(){
 	redLed = 1;
@@ -34,8 +34,6 @@ void Beep_Setup(){
 }
 
 void OLED_setup(){
-	int cnt = 0;
-	bool inverted = false;
 	int textSize = 1;
 	
 	i2cMaster.frequency(400000);
@@ -54,8 +52,8 @@ void joystick_setup(){
 }
 
 int main() {
-	int enter_pwd;		// interim measures
-	int pwd = 1234;
+	int enter_pwd[4];		// interim measures
+	int pwd[4] = {1,2,3,4};
 	setup();
 	Beep_Setup();
 	OLED_setup();
@@ -94,12 +92,30 @@ int main() {
 				break;
 			
 			case Pwd_Mode:
-				scanf("%d", &enter_pwd);	// interim measure
-				if(Checking_PWD(pwd, enter_pwd) == 1) work = Door_open;
+				if(Checking_PWD(*pwd, *enter_pwd) == 1) work = Door_open;
 				else {
 					Incorrect_Number_Beep();
 					work = Waiting;
 				}
+				break;
+			
+			case Doorlock_OLED:
+				// user enter number
+				for(int i = 0; i < 4 ;){
+				Doorlock_Display();
+				// user control number
+				/*
+					if(joystick >= right){
+						
+					} else if(joystick >= left){}
+						else if(joysitck >= up){}
+						else if(joystick >= down){}
+				*/
+					if(ENTER_BTN_EDGE() == FALLING_EDGE){
+						// *enter_pwd[i] = number;
+					}
+				}
+				work = Pwd_Mode;
 				break;
 		}
 	}

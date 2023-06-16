@@ -120,10 +120,10 @@ void Close_Door_Beep(){
 /* System Function */
 
 // Compare to user-entered password
-int Checking_PWD(int pwd, int user_pwd){
-	char pwd_str[5], user_pwd_str[5];
-	*pwd_str = pwd;
-	*user_pwd_str = user_pwd;
+int Checking_PWD(int *pwd, int *user_pwd){
+	char pwd_str[4], user_pwd_str[4];
+	*pwd_str = *pwd;
+	*user_pwd_str = *user_pwd;
 	
 	bool check = true;
 	
@@ -154,4 +154,19 @@ void Control_Motor(){
 	else if(X < 0) motorA.setDir(BACKWARD_DIR);
 	if(Y > 0) motorA.incSpeed(0.05);
 	else if(Y < 0) motorA.incSpeed(-0.05);
+}
+
+// OLED Doorlock
+void Doorlock_Display(){
+	int textSize = 1;
+	
+	myOLED.clearDisplay();
+	myOLED.drawRect(10, 10, 10, 10, WHITE);
+	myOLED.setTextSize(textSize);
+	for(int i = 1; i <= 9; i++){
+		myOLED.setTextCursor(44, 14);
+		myOLED.writeChar(0x30 + i);
+	}
+	
+	myOLED.display();
 }

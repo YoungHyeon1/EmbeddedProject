@@ -58,5 +58,6 @@ void Close_Door_Beep();
 int Checking_PWD(int pwd, int user_pwd);
 void readJoystick();
 void Control_Motor();
+void Doorlock_Display();
 
 #endif
