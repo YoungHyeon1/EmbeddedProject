@@ -33,8 +33,7 @@
             android:layout_weight="1.1"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-            <Button
-                android:paddingRight="20dp"
+            <android.widget.Button
                 android:backgroundTint="#F6A333"
                 android:id="@+id/bluetooth_connect_button"
                 android:text="CONNECT"

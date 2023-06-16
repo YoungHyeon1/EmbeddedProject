@@ -2,6 +2,8 @@ package com.example.embeddedapp;
 import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
 import static androidx.core.content.ContextCompat.startActivity;
+
+import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.content.Context;
 import android.graphics.Color;
@@ -18,8 +20,10 @@ import java.util.ArrayList;
 
 public class BluetoothAdapterView extends BaseAdapter{
     private Context _context;
-    public BluetoothAdapterView(Context context) {
+    private BluetoothAdapter _parent_bluetooth;
+    public BluetoothAdapterView(Context context, BluetoothAdapter parent_bluetooth) {
         this._context = context;
+        this._parent_bluetooth = parent_bluetooth;
     }
     private ArrayList<BluetoothItems> items = new ArrayList<>();
     @Override
@@ -55,12 +59,21 @@ public class BluetoothAdapterView extends BaseAdapter{
         bluetootn_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println((int)v.getTag());
-                Toast.makeText(context, items.get((int)v.getTag()).getMacAddress(), Toast.LENGTH_LONG).show();
-                items.get(v.getTag().hashCode()).getMacAddress();
-                Intent intent = new Intent(_context, BlueToothViews.class);
-                intent.putExtra("TEST", "TEST");
-                _context.startActivity(intent);
+                try{
+                    System.out.println((int)v.getTag());
+                    if (_parent_bluetooth.isDiscovering())
+                    {
+                        _parent_bluetooth.cancelDiscovery();
+                    }
+                    Toast.makeText(context, items.get((int)v.getTag()).getMacAddress(), Toast.LENGTH_LONG).show();
+                    items.get(v.getTag().hashCode()).getMacAddress();
+                    Intent intent = new Intent(_context, BlueToothViews.class);
+                    intent.putExtra("TEST", "TEST");
+                    _context.startActivity(intent);
+                } catch (SecurityException e){
+
+                }
+
             }
         });
         return convertView;

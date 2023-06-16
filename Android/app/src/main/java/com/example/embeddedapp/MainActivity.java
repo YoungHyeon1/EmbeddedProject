@@ -50,7 +50,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         bt_list_view = (ListView) findViewById(R.id.listview);
-        mMyAdapter = new BluetoothAdapterView(MainActivity.this);
         try{
             bluetoothPermission();
         }catch (Exception e)
@@ -68,6 +67,12 @@ public class MainActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         Log.d("RequestPermision Result", String.valueOf(requestCode));
+        boolean is_permission = false;
+        if(!checkPermission()){
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            alert.setPositiveButton("확인", null);
+            alert.setMessage("권한을 허용하지 않으면 앱 사용이 제한됩니다.");
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             for (String permission : permissions) {
                 if (shouldShowRequestPermissionRationale(permission)) {
@@ -133,9 +138,10 @@ public class MainActivity extends AppCompatActivity {
         } else {
             bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         }
+        mMyAdapter = new BluetoothAdapterView(MainActivity.this, bluetoothAdapter);
         if (!bluetoothAdapter.isEnabled()) {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableBtIntent, 100);
+            startActivityForResult(enableBtIntent, 1023);
             mMyAdapter.addItem("TEST Name", "TestAddress");
             bt_list_view.setAdapter(mMyAdapter);
             bluetoothAdapter.startDiscovery();
@@ -154,31 +160,24 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("Bluetooth Request", "DENIED");
             }
         }
+
     }
         private final BroadcastReceiver receiver = new BroadcastReceiver() {
 
             public void onReceive(Context context, Intent intent) {
                 String action = intent.getAction();
                 if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-                    // Discovery has found a device. Get the BluetoothDevice
-                    // object and its info from the Intent.
-                    BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                    if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-                        // TODO: Consider calling
-                        //    ActivityCompat#requestPermissions
-                        // here to request the missing permissions, and then overriding
-                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                        //                                          int[] grantResults)
-                        // to handle the case where the user grants the permission. See the documentation
-                        // for ActivityCompat#requestPermissions for more details.
-                        Toast.makeText(MainActivity.this, "Permission Error", Toast.LENGTH_LONG).show();
-                        return;
+                    try{
+                        BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                        String deviceName = device.getName();
+                        String deviceHardwareAddress = device.getAddress(); // MAC address
+                        Log.d("Bluetooth TEST", deviceName);
+                        mMyAdapter.addItem(deviceName, deviceHardwareAddress);
+                        bt_list_view.setAdapter(mMyAdapter);
+                    } catch (SecurityException e){
+                        Toast.makeText(getApplicationContext(), "블루투스를 활성화가 필요합니다", Toast.LENGTH_LONG).show();
                     }
-                    String deviceName = device.getName();
-                    String deviceHardwareAddress = device.getAddress(); // MAC address
-                    Log.d("Bluetooth TEST", deviceName);
-                    mMyAdapter.addItem(deviceName, deviceHardwareAddress);
-                    bt_list_view.setAdapter(mMyAdapter);
+
                 }
             }
         };
