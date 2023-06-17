@@ -26,6 +26,14 @@ public class BluetoothAdapterView extends BaseAdapter{
         this._parent_bluetooth = parent_bluetooth;
     }
     private ArrayList<BluetoothItems> items = new ArrayList<>();
+
+    public void clear(){
+        items.clear();
+    }
+    public ArrayList<BluetoothItems> getItems() {
+        return items;
+    }
+
     @Override
     public int getCount() {
         return items.size();

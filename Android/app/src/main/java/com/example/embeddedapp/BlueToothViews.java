@@ -22,7 +22,7 @@ public class BlueToothViews extends AppCompatActivity {
         Intent intent = getIntent();
         String bluetooth_mac_address = intent.getStringExtra("mac_address");
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        bluetoothDevice = bluetoothAdapter.getRemoteDevice("");
+        bluetoothDevice = bluetoothAdapter.getRemoteDevice(bluetooth_mac_address);
 
         bluetooth_client = new BluetoothClient(bluetoothDevice);
         bluetooth_client.start();

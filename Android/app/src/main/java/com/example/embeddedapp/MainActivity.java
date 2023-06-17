@@ -5,10 +5,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.splashscreen.SplashScreen;
 
 import android.Manifest;
-import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
@@ -18,15 +16,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.util.Log;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -44,6 +41,12 @@ public class MainActivity extends AppCompatActivity {
     private ListView bt_list_view;
 
     @Override
+    protected void onDestroy() {
+        mMyAdapter.clear();
+        super.onDestroy();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
 //        SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
 
@@ -58,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
         }
         Log.d("TEST", "OnCreate");
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+//        filter = new IntentFilter(BluetoothDevice.AC)
         registerReceiver(receiver, filter);
         //moveList(1);
 
@@ -163,6 +167,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
         private final BroadcastReceiver receiver = new BroadcastReceiver() {
+            final List<String> overlab_bluetooth = new ArrayList<>();
 
             public void onReceive(Context context, Intent intent) {
                 String action = intent.getAction();
@@ -171,9 +176,15 @@ public class MainActivity extends AppCompatActivity {
                         BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                         String deviceName = device.getName();
                         String deviceHardwareAddress = device.getAddress(); // MAC address
-                        Log.d("Bluetooth TEST", deviceName);
-                        mMyAdapter.addItem(deviceName, deviceHardwareAddress);
-                        bt_list_view.setAdapter(mMyAdapter);
+//                        Log.d("Bluetooth TEST", deviceName);
+                        if (!(deviceName == null)){
+                            if (!overlab_bluetooth.contains(deviceHardwareAddress))
+                            {
+                                mMyAdapter.addItem(deviceName, deviceHardwareAddress);
+                                bt_list_view.setAdapter(mMyAdapter);
+                            }
+                        }
+
                     } catch (SecurityException e){
                         Toast.makeText(getApplicationContext(), "블루투스를 활성화가 필요합니다", Toast.LENGTH_LONG).show();
                     }
