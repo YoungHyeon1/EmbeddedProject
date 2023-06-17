@@ -48,7 +48,8 @@ public class BluetoothClient extends Thread {
             // until it succeeds or throws an exception.
             mmSocket.connect();
             bt_thread = new BluetoothSocketThread();
-
+            BluetoothSocketThread.DataThread bt_thread = new BluetoothSocketThread.DataThread(mmSocket);
+            bt_thread.start();
         } catch (IOException connectException) {
             // Unable to connect; close the socket and return.
             try {

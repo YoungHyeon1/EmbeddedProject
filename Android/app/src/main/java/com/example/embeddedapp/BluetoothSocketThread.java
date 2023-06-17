@@ -12,7 +12,7 @@ import java.io.OutputStream;
 
 public class BluetoothSocketThread {
     private static final String TAG = "MY_APP_DEBUG_TAG";
-    private Handler handler; // handler that gets info from Bluetooth service
+    static public Handler handler; // handler that gets info from Bluetooth service
 
     // Defines several constants used when transmitting messages between the
     // service and the UI.
@@ -24,7 +24,7 @@ public class BluetoothSocketThread {
         // ... (Add other message types here as needed.)
     }
 
-    private class DataThread extends Thread {
+    static class DataThread extends Thread {
         private final BluetoothSocket mmSocket;
         private final InputStream mmInStream;
         private final OutputStream mmOutStream;

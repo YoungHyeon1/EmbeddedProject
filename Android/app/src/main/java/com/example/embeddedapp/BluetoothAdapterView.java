@@ -68,7 +68,7 @@ public class BluetoothAdapterView extends BaseAdapter{
                     Toast.makeText(context, items.get((int)v.getTag()).getMacAddress(), Toast.LENGTH_LONG).show();
                     items.get(v.getTag().hashCode()).getMacAddress();
                     Intent intent = new Intent(_context, BlueToothViews.class);
-                    intent.putExtra("TEST", "TEST");
+                    intent.putExtra("mac_address", items.get((int)v.getTag()).getMacAddress());
                     _context.startActivity(intent);
                 } catch (SecurityException e){
 
