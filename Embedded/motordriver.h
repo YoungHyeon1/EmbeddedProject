@@ -12,9 +12,6 @@ class Motor{
 		void forward(double speed);
 		void backward(double speed);
 		void stop(void);
-		void setDir(int dir);
-		void incSpeed(double step);
-		void decSpeed(double step);
 	
 	protected:
 		PwmOut _pwm;

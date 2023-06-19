@@ -2,6 +2,7 @@
 #include "Doorlock.h"
 #include "motordriver.h"
 #include "Adafruit_GFX/Adafruit_SSD1306.h"
+#include "DHT22.h"
 
 /*
 		Team project by Embedded.
@@ -14,20 +15,18 @@
 		Currently, files that need to be added include "motor", "temperature", "humidity" and "buzzer".
 */
 
-Timer tm;
+Timer autotm;
 
-enum { Waiting, Door_open, Door_waiting, Door_Close, Pwd_Mode, Doorlock_OLED } work;
+enum {Enter_pwd , Door_open, Door_waiting, Door_Close} work;
 
+// Setup the equipment of MCU
 void setup(){
-	work = Waiting;
 	redLed = 1;
 	yellowLed = 0;
 	greenLed = 0;
 	Close_Door();
-	tm.start();
+	autotm.start();
 }
-
-// Beep Setup Transliteration C
 void Beep_Setup(){
 	buzzer.period_us(BEEP_HALF_PERIOD);
 	buzzer = 0;
@@ -49,75 +48,69 @@ void OLED_setup(){
 
 void joystick_setup(){
 	jsTicker.attach(&readJoystick, 0.2);
-	ctrlTicker.attach(&Control_Motor, 1.0);
 }
+// End Setup functions
 
 int main() {
 	int enter_pwd[4];		// interim measures
 	int pwd[4] = {1,2,3,4};
+	bool interrupt = false;
 	setup();
 	Beep_Setup();
 	OLED_setup();
-	
+	joystick_setup();
 	while(1){
-		switch(work){
-			case Waiting:
-				// Add a Status Code While Waiting
-				// if(user enter pwd)
-				// work = check_pwd;
-				break;
-			
-			case Door_open:
-				Open_Door();					// 1. turn left motor
-				Open_Door_Beep();			// 2. beep sound on
-				greenLed = 0;					// 3. turn out green LED
-				tm.reset();						// 4. reset & check 30 sec of timer
-				tm.start();
-				work = Door_waiting;	// 5. change door is waiting case
-				break;
-			
-			case Door_waiting:
-				yellowLed = 1;				// waiting LED
-				// if timer over 30 sec or user click enter button
-				if(tm.read_ms() >= 30000 || ENTER_BTN_EDGE() == FALLING_EDGE){
-					tm.reset();
-					work = Door_Close;	// change Close case
-				}
-				break;
+		/*
+		Temperature & humidity code here
+		sda_OLED();
+		if(ENTER_BTN_EDGE() == FALLING_EDGE) {
+			work = Enter_pwd;
+			interrupt = true;
+		}
+		*/
+		
+		while(interrupt){
+			switch(work){
+				case Enter_pwd:
+					// If the User enters the password
+					*enter_pwd = Password_OLED(enter_pwd);
 				
-			case Door_Close:
-				yellowLed = 0;				// 1. turn off waiting LED
-				Close_Door();					// 2. turn right motor
-				Close_Door_Beep();		// 3. beep sound on
-				work = Waiting;				// 4. change Waiting case
-				break;
-			
-			case Pwd_Mode:
-				if(Checking_PWD(*pwd, *enter_pwd) == 1) work = Door_open;
-				else {
-					Incorrect_Number_Beep();
-					work = Waiting;
-				}
-				break;
-			
-			case Doorlock_OLED:
-				// user enter number
-				for(int i = 0; i < 4 ;){
-				Doorlock_Display();
-				// user control number
-				/*
-					if(joystick >= right){
-						
-					} else if(joystick >= left){}
-						else if(joysitck >= up){}
-						else if(joystick >= down){}
-				*/
-					if(ENTER_BTN_EDGE() == FALLING_EDGE){
-						// *enter_pwd[i] = number;
+					if(Checking_PWD(*pwd, *enter_pwd) == 1) work = Door_open;
+					else {
+						Incorrect_Number_Beep();
+						work = Enter_pwd;
 					}
-				}
-				work = Pwd_Mode;
-				break;
+					break;
+				
+				case Door_open:
+					// If the password is correct
+					Open_Door();					// 1. turn left motor
+					Open_Door_Beep();			// 2. beep sound on
+					greenLed = 0;					// 3. turn out green LED
+					autotm.reset();						// 4. reset & check 30 sec of timer
+					autotm.start();
+					work = Door_waiting;	// 5. change door is waiting case
+					break;
+				
+				case Door_waiting:
+					// After the door opens and closes
+					yellowLed = 1;				// waiting LED
+					// if timer over 30 sec or user click enter button
+					if(autotm.read_ms() >= 30000 || OPEN_BTN_EDGE() == FALLING_EDGE){
+						autotm.reset();
+						work = Door_Close;	// change Close case
+					}
+					break;
+					
+				case Door_Close:
+					// a door closes
+					yellowLed = 0;				// 1. turn off waiting LED
+					Close_Door();					// 2. turn right motor
+					Close_Door_Beep();		// 3. beep sound on
+					work = Enter_pwd;				// 4. change Waiting case
+					interrupt = false;
+					break;
+			}
 		}
 	}
 }

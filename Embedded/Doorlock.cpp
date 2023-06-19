@@ -2,6 +2,7 @@
 #include "Doorlock.h"
 #include "motordriver.h"
 #include "Adafruit_GFX/Adafruit_SSD1306.h"
+#include "DHT22.h"
 
 int X, Y;
 
@@ -149,24 +150,37 @@ void readJoystick(){
 	if(abs(Y) <= 1) Y = 0;
 }
 
-void Control_Motor(){
-	if(X > 0) motorA.setDir(FORWARD_DIR);
-	else if(X < 0) motorA.setDir(BACKWARD_DIR);
-	if(Y > 0) motorA.incSpeed(0.05);
-	else if(Y < 0) motorA.incSpeed(-0.05);
-}
-
 // OLED Doorlock
-void Doorlock_Display(){
-	int textSize = 1;
+int Password_OLED(int *enter_pwd){
+	int number = 0;
 	
-	myOLED.clearDisplay();
-	myOLED.drawRect(10, 10, 10, 10, WHITE);
-	myOLED.setTextSize(textSize);
-	for(int i = 1; i <= 9; i++){
+	while(enter_pwd[4] != '\0'){
+		myOLED.clearDisplay();
+		myOLED.drawRect(30, 10, 40, 50 ,WHITE);
+		myOLED.display();
+		
+		myOLED.setTextSize(4);
 		myOLED.setTextCursor(44, 14);
-		myOLED.writeChar(0x30 + i);
+		myOLED.writeChar(0x30 + number);
+		
+		if(X > 70 && Y > 70) number++;
+		if(X < -5 && Y < -3) number--;
+		myOLED.display();
 	}
 	
-	myOLED.display();
+	return *enter_pwd;
+}
+
+// OLED temperature & humidity
+void sda_OLED(){
+	float temp, humidity;
+	
+	if(dht22.sample()){
+		myOLED.clearDisplay();
+		temp = dht22.getTemperature() / 10.0;
+		humidity = dht22.getHumidity() / 10.0;
+			
+		printf("Temp = %+4.1f C\t Humidity = %4.1f %% \n\n", temp, humidity);
+		myOLED.display();
+	}
 }

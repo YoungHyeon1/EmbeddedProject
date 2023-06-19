@@ -5,6 +5,7 @@
 #include "mbed.h"
 #include "motordriver.h"
 #include "Adafruit_GFX/Adafruit_SSD1306.h"
+#include "DHT22.h"
 
 // Define Pin
 #define BUZZER_PIN			PC_9
@@ -15,6 +16,7 @@
 #define RED_LED_PIN			PA_4
 #define FIRST_BTN_PIN		PA_14
 #define THIRD_BTN_PIN		PC_4
+#define SDA_PIN					PB_2
 #define BEEP_HALF_PERIOD 1915
 #define JS_X_AXIS		PC_2
 #define JS_Y_AXIS		PC_3
@@ -42,6 +44,7 @@ AnalogIn yAxis(JS_Y_AXIS);
 Ticker jsTicker;
 Ticker ctrlTicker;
 Motor motorA(MOTOR_A_PWM_PIN, MOTOR_A_DIR_PIN);
+DHT22 dht22(SDA_PIN);
 
 // edge Button
 typedef enum{
@@ -59,5 +62,7 @@ int Checking_PWD(int pwd, int user_pwd);
 void readJoystick();
 void Control_Motor();
 void Doorlock_Display();
+int Password_OLED(int *enter_pwd);
+void sda_OLED();
 
 #endif
