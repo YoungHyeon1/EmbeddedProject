@@ -1,5 +1,5 @@
-#ifndef DOORLOCK
-#define DOORLOCK
+#ifndef Doorlock
+#define Doorlock
 
 // include header file list
 #include "mbed.h"

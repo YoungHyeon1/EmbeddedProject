@@ -1,5 +1,5 @@
 #include "mbed.h"
-#include "DOORLOCK.h"
+#include "Doorlock.h"
 #include "motordriver.h"
 #include "Adafruit_GFX/Adafruit_SSD1306.h"
 
@@ -19,6 +19,7 @@ Timer tm;
 enum { Waiting, Door_open, Door_waiting, Door_Close, Pwd_Mode, Doorlock_OLED } work;
 
 void setup(){
+	work = Waiting;
 	redLed = 1;
 	yellowLed = 0;
 	greenLed = 0;
@@ -29,7 +30,7 @@ void setup(){
 // Beep Setup Transliteration C
 void Beep_Setup(){
 	buzzer.period_us(BEEP_HALF_PERIOD);
-	buzzer = 0.5;
+	buzzer = 0;
 	buzzertm.start();
 }
 

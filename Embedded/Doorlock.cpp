@@ -1,5 +1,5 @@
 #include "mbed.h"
-#include "DOORLOCK.h"
+#include "Doorlock.h"
 #include "motordriver.h"
 #include "Adafruit_GFX/Adafruit_SSD1306.h"
 
