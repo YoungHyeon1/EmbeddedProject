@@ -152,6 +152,12 @@ void wrongBuzzer(){
 		wait(0.3);
 	}
 }
+void overcntBuzzer(){
+	autotm.reset();
+	buzzer = 0.5;
+	while(autotm.read() <= 10){
+	}
+}
 void OpenCloseDoor(){
 	/*
 		if door is open, door result is true
@@ -288,6 +294,7 @@ void setup(){
 
 int main(){
 	setup();
+	int wrongPWDcnt = 0;
 	while(1){
 		SDA_OLED();
 		if(OPEN_BTN_EDGE() == FALLING_EDGE) {
@@ -299,8 +306,16 @@ int main(){
 				doorStatus = 1;
 				OpenCloseDoor();
 			} else {
+				wrongPWDcnt++;
+				if(wrongPWDcnt >= 3){
+				overcntBuzzer();
+				wrongPWDcnt = 0;
+				}
 				wrongBuzzer();
+				
 			}
 		}
+		
+		
 	}
 }
