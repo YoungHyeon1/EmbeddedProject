@@ -11,7 +11,7 @@ class Motor{
 		Motor(PinName pwm, PinName dir);
 		void forward(double speed);
 		void backward(double speed);
-		void stop(void);
+		void stop();
 	
 	protected:
 		PwmOut _pwm;
