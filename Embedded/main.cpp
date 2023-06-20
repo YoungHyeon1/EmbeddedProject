@@ -54,6 +54,7 @@ Ticker jsTicker;
 Ticker ctrlTicker;
 
 int X, Y;
+int doorStatus = 0;
 
 // edge Button
 typedef enum{
@@ -156,6 +157,7 @@ void OpenCloseDoor(){
 		if door is open, door result is true
 		else door is close, door result is false
 	*/
+			// doorStatus = 1;
 			OpendoorBuzzer();
 			greenLed = 1;
 			redLed = 0;
@@ -182,6 +184,7 @@ void OpenCloseDoor(){
 			motortm.start();
 			door_work.backward(0.5);
 			wait(0.5);
+			doorStatus = 0;
 			door_work.stop();
 			motortm.stop();
 			motortm.reset();
@@ -287,9 +290,13 @@ int main(){
 	setup();
 	while(1){
 		SDA_OLED();
-		if(OPEN_BTN_EDGE() == FALLING_EDGE) OpenCloseDoor();
+		if(OPEN_BTN_EDGE() == FALLING_EDGE) {
+			doorStatus = 1;
+			OpenCloseDoor();
+		}
 		if(ENTER_BTN_EDGE() == FALLING_EDGE) {
 			if(checkPWD()){
+				doorStatus = 1;
 				OpenCloseDoor();
 			} else {
 				wrongBuzzer();
