@@ -16,9 +16,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -30,6 +33,8 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     private List permissionList;
     BluetoothAdapterView mMyAdapter;
+    LocationManager _location;
+    Button search_btn;
 
     private String[] permissions = {
             Manifest.permission.ACCESS_FINE_LOCATION,
@@ -52,7 +57,9 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        _location = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
         bt_list_view = (ListView) findViewById(R.id.listview);
+        search_btn = (Button) findViewById(R.id.search_id);
         try{
             bluetoothPermission();
         }catch (Exception e)
@@ -65,13 +72,46 @@ public class MainActivity extends AppCompatActivity {
         registerReceiver(receiver, filter);
         //moveList(1);
 
+        search_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mMyAdapter = new BluetoothAdapterView(MainActivity.this, bluetoothAdapter);
+
+                try{
+                    Log.d("is Discovery", String.valueOf(bluetoothAdapter.isDiscovering()));
+                    if (!bluetoothAdapter.isEnabled()) {
+                        Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                        startActivityForResult(enableBtIntent, 1023);
+                    }
+
+                    mMyAdapter.addItem("TEST Name", "TestAddress");
+                    bt_list_view.setAdapter(mMyAdapter);
+                    find_bluetooth_device();
+                } catch (SecurityException e){
+                    Log.d("Security Error", String.valueOf(e));
+                } catch (Exception e){
+                    Log.d("Security Error", String.valueOf(e));
+                }
+            }
+        });
     }
 
+    private void find_bluetooth_device(){
+        try{
+            if (bluetoothAdapter.isDiscovering()){
+                bluetoothAdapter.cancelDiscovery();
+                bluetoothAdapter.startDiscovery();
+            }else{
+                bluetoothAdapter.startDiscovery();
+
+            }
+        }catch (SecurityException e){}
+
+    }
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         Log.d("RequestPermision Result", String.valueOf(requestCode));
-        boolean is_permission = false;
         if(!checkPermission()){
             AlertDialog.Builder alert = new AlertDialog.Builder(this);
             alert.setPositiveButton("확인", null);
@@ -122,6 +162,7 @@ public class MainActivity extends AppCompatActivity {
             result = ContextCompat.checkSelfPermission(this, pm);
             Log.d("checkPermission", String.valueOf(result));
             if(result != PackageManager.PERMISSION_GRANTED){
+                Log.d("checkPermission Not", String.valueOf(result));
                 permissionList.add(pm);
             }
         }
@@ -142,47 +183,21 @@ public class MainActivity extends AppCompatActivity {
         } else {
             bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         }
-        mMyAdapter = new BluetoothAdapterView(MainActivity.this, bluetoothAdapter);
-        if (!bluetoothAdapter.isEnabled()) {
-            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableBtIntent, 1023);
-            mMyAdapter.addItem("TEST Name", "TestAddress");
-            bt_list_view.setAdapter(mMyAdapter);
-            bluetoothAdapter.startDiscovery();
-        }else{
-            mMyAdapter.addItem("TEST Name", "TestAddress");
-            bt_list_view.setAdapter(mMyAdapter);
-            bluetoothAdapter.startDiscovery();
 
-        }
-        if (ContextCompat.checkSelfPermission(
-                MainActivity.this,
-                Manifest.permission.BLUETOOTH_SCAN
-        ) == PackageManager.PERMISSION_DENIED) {
-            if (Build.VERSION.SDK_INT >= 31) {
-                ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.BLUETOOTH_SCAN}, 100);
-                Log.d("Bluetooth Request", "DENIED");
-            }
-        }
 
     }
         private final BroadcastReceiver receiver = new BroadcastReceiver() {
-            final List<String> overlab_bluetooth = new ArrayList<>();
-
             public void onReceive(Context context, Intent intent) {
                 String action = intent.getAction();
+                Log.d("BlueTooth Recive Test", intent.getAction());
                 if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                     try{
                         BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                         String deviceName = device.getName();
                         String deviceHardwareAddress = device.getAddress(); // MAC address
-//                        Log.d("Bluetooth TEST", deviceName);
                         if (!(deviceName == null)){
-                            if (!overlab_bluetooth.contains(deviceHardwareAddress))
-                            {
                                 mMyAdapter.addItem(deviceName, deviceHardwareAddress);
                                 bt_list_view.setAdapter(mMyAdapter);
-                            }
                         }
 
                     } catch (SecurityException e){

@@ -1,5 +1,7 @@
 package com.example.embeddedapp;
 
+import static com.example.embeddedapp.BlueToothViews.mHand;
+
 import android.bluetooth.BluetoothSocket;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,7 +14,7 @@ import java.io.OutputStream;
 
 public class BluetoothSocketThread {
     private static final String TAG = "MY_APP_DEBUG_TAG";
-    static public Handler handler; // handler that gets info from Bluetooth service
+//    static public Handler handler; // handler that gets info from Bluetooth service
 
     // Defines several constants used when transmitting messages between the
     // service and the UI.
@@ -62,7 +64,7 @@ public class BluetoothSocketThread {
                     // Read from the InputStream.
                     numBytes = mmInStream.read(mmBuffer);
                     // Send the obtained bytes to the UI activity.
-                    Message readMsg = handler.obtainMessage(
+                    Message readMsg = mHand.obtainMessage(
                             MessageConstants.MESSAGE_READ, numBytes, -1,
                             mmBuffer);
                     readMsg.sendToTarget();
@@ -79,7 +81,7 @@ public class BluetoothSocketThread {
                 mmOutStream.write(bytes);
 
                 // Share the sent message with the UI activity.
-                Message writtenMsg = handler.obtainMessage(
+                Message writtenMsg = mHand.obtainMessage(
                         MessageConstants.MESSAGE_WRITE, -1, -1, mmBuffer);
                 writtenMsg.sendToTarget();
             } catch (IOException e) {
@@ -87,12 +89,12 @@ public class BluetoothSocketThread {
 
                 // Send a failure message back to the activity.
                 Message writeErrorMsg =
-                        handler.obtainMessage(MessageConstants.MESSAGE_TOAST);
+                        mHand.obtainMessage(MessageConstants.MESSAGE_TOAST);
                 Bundle bundle = new Bundle();
                 bundle.putString("toast",
                         "Couldn't send data to the other device");
                 writeErrorMsg.setData(bundle);
-                handler.sendMessage(writeErrorMsg);
+                mHand.sendMessage(writeErrorMsg);
             }
         }
 

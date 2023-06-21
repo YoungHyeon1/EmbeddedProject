@@ -12,7 +12,7 @@ public class SplashActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-//        SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
+        SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
 //        setTheme(R.style.Theme_App);
         super.onCreate(savedInstanceState);
 //        setContentView(R.layout.activity_splash);

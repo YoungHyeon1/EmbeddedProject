@@ -15,9 +15,10 @@ import java.io.OutputStream;
 import java.util.UUID;
 
 public class BluetoothClient extends Thread {
-    private final BluetoothSocket mmSocket;
+    public final BluetoothSocket mmSocket;
     private final BluetoothDevice mmDevice;
     BluetoothSocketThread bt_thread;
+    BluetoothSocketThread.DataThread bt_inner_thread;
 
 
     private byte[] mmBuffer; // mmBuffer store for the stream
@@ -47,9 +48,12 @@ public class BluetoothClient extends Thread {
             // Connect to the remote device through the socket. This call blocks
             // until it succeeds or throws an exception.
             mmSocket.connect();
-            bt_thread = new BluetoothSocketThread();
-            BluetoothSocketThread.DataThread bt_thread = new BluetoothSocketThread.DataThread(mmSocket);
-            bt_thread.start();
+            bt_inner_thread = new BluetoothSocketThread.DataThread(mmSocket);
+            bt_inner_thread.start();
+//            bt_thread = new BluetoothSocketThread();
+//            BluetoothSocketThread.DataThread bt_thread = new BluetoothSocketThread.DataThread(mmSocket);
+//            bt_thread.start();
+//            bt_thread.write();
         } catch (IOException connectException) {
             // Unable to connect; close the socket and return.
             try {
@@ -65,6 +69,7 @@ public class BluetoothClient extends Thread {
         // the connection in a separate thread.
 //        manageMyConnectedSocket(mmSocket);
     }
+
 
     // Closes the client socket and causes the thread to finish.
     public void cancel() {

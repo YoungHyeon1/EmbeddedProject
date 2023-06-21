@@ -111,9 +111,6 @@
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-
-
-
     <LinearLayout
         android:orientation="vertical"
         android:layout_weight="0.7"
