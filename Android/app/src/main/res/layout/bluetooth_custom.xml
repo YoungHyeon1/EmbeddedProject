@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:paddingLeft="20dp"
+            android:layout_weight="0.5"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ImageView
+                android:paddingRight="20dp"
+                android:layout_gravity="center"
+                android:src="@drawable/baseline_bluetooth_24"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:textColor="#000000"
+                android:id="@+id/bluetooth_title"
+                android:layout_gravity="center"
+                android:text="BlueTooth Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_gravity="center"
+            android:layout_weight="1.1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <android.widget.Button
+                android:backgroundTint="#F6A333"
+                android:id="@+id/bluetooth_connect_button"
+                android:text="CONNECT"
+                android:textColor="#FFFFFF"
+                android:background="#F6A333"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
