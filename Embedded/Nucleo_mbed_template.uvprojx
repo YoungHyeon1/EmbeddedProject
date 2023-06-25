@@ -134,11 +134,11 @@
             <RunIndependent>0</RunIndependent>
             <UpdateFlashBeforeDebugging>1</UpdateFlashBeforeDebugging>
             <Capability>1</Capability>
-            <DriverSelection>-1</DriverSelection>
+            <DriverSelection>4096</DriverSelection>
           </Flash1>
           <bUseTDR>1</bUseTDR>
           <Flash2>BIN\UL2CM3.DLL</Flash2>
-          <Flash3></Flash3>
+          <Flash3>"" ()</Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -2336,6 +2336,56 @@
               <FileName>mbed_config.h</FileName>
               <FileType>5</FileType>
               <FilePath>mbed_config.h</FilePath>
+            </File>
+            <File>
+              <FileName>motordriver.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\motordriver.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>motordriver.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\motordriver.h</FilePath>
+            </File>
+            <File>
+              <FileName>DHT22.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\DHT22.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>DHT22.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\DHT22.h</FilePath>
+            </File>
+            <File>
+              <FileName>Adafruit_GFX.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\Adafruit_GFX\Adafruit_GFX.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>Adafruit_GFX.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Adafruit_GFX\Adafruit_GFX.h</FilePath>
+            </File>
+            <File>
+              <FileName>Adafruit_GFX_Config.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Adafruit_GFX\Adafruit_GFX_Config.h</FilePath>
+            </File>
+            <File>
+              <FileName>Adafruit_SSD1306.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\Adafruit_GFX\Adafruit_SSD1306.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>Adafruit_SSD1306.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Adafruit_GFX\Adafruit_SSD1306.h</FilePath>
+            </File>
+            <File>
+              <FileName>glcdfont.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Adafruit_GFX\glcdfont.h</FilePath>
             </File>
           </Files>
         </Group>
